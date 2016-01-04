@@ -14,3 +14,9 @@ Array resize(Array a,int length){
   a.length = length;
   return a;
 };
+
+int areEqual(Array a, Array b){
+  if(a.typeSize == b.typeSize && a.length == b.length)
+    return 1;
+  return 0;
+};
