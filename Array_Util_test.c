@@ -58,6 +58,25 @@ void test2_for_areEqual(){
   printf("test passed\n\n");
 };
 
+void test3_for_areEqual(){
+  Array a = create(4,3);
+  Array b = create(4,3);
+  ((int *)a.base)[0] = 8;
+  ((int *)b.base)[0] = 8;
+  assert(areEqual(a,b)==1);
+  printf("test passed\n\n");
+};
+
+void test4_for_areEqual(){
+  Array a = create(4,3);
+  Array b = create(4,3);
+  ((int *)a.base)[0] = 8;
+  ((int *)b.base)[0] = 9;
+  assert(areEqual(a,b)==0);
+  printf("test passed\n\n");
+};
+
+
 int main(void){
   printf("1.test_for_create_array: 'create' creates an array and adds three fields to it\n");
   test_for_create_array();
@@ -67,10 +86,14 @@ int main(void){
   test_for_resize_array();
   printf("4.test2_for_resize_array:'resize' decreases the size of array for lesser given length\n");
   test2_for_resize_array();
-  printf("5.test_for_areEqual:'forEqual' gives 1 when given two arrays are same\n");
+  printf("5.test_for_areEqual:'areEqual' gives 1 when given two arrays are same\n");
   test_for_areEqual();
-  printf("6.test_for_areEqual:'forEqual' gives 0 when given two arrays are different\n");
+  printf("6.test2_for_areEqual:'areEqual' gives 0 when given two arrays are different\n");
   test2_for_areEqual();
+  printf("7.test3_for_areEqual:'areEqual' gives 1 when given two arrays have same values\n");
+  test3_for_areEqual();
+  printf("8.test4_for_areEqual:'areEqual' gives 0 when given two arrays have same values\n");
+  test4_for_areEqual();
   return 0;
 };
 

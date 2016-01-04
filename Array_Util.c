@@ -16,7 +16,14 @@ Array resize(Array a,int length){
 };
 
 int areEqual(Array a, Array b){
-  if(a.typeSize == b.typeSize && a.length == b.length)
-    return 1;
-  return 0;
+  if(!(a.typeSize == b.typeSize) || !(a.length == b.length))
+    return 0;
+  int i = 0;
+  while(i<a.length){
+    if(!(((int *)a.base)[i]==((int *)b.base)[i])){
+      return 0;
+    }
+    i++;
+  }
+  return 1;
 };
