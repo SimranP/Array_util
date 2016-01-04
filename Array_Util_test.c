@@ -76,6 +76,20 @@ void test4_for_areEqual(){
   printf("test passed\n\n");
 };
 
+void test_for_findIndex(){
+  Array a = create(4,6);
+  ((int *)a.base)[4] = 8;
+  assert(findIndex(a,(int *)8)==4);
+  printf("test passed\n\n");
+};
+
+void test2_for_findIndex(){
+  Array a = create(4,6);
+  ((int *)a.base)[4] = 8;
+  assert(findIndex(a,(int *)4)==-1);
+  printf("test passed\n\n");
+};
+
 
 int main(void){
   printf("1.test_for_create_array: 'create' creates an array and adds three fields to it\n");
@@ -94,6 +108,10 @@ int main(void){
   test3_for_areEqual();
   printf("8.test4_for_areEqual:'areEqual' gives 0 when given two arrays have same values\n");
   test4_for_areEqual();
+  printf("9.test_for_findIndex:'findIndex' gives index number  when it has the given element\n");
+  test_for_findIndex();
+  printf("10.test2_for_findIndex:'findIndex' gives index number  when it doesn't have the given element\n");
+  test2_for_findIndex();
   return 0;
 };
 

@@ -27,3 +27,13 @@ int areEqual(Array a, Array b){
   }
   return 1;
 };
+
+int findIndex(Array a,void* element){
+ for(int i = 0;i < a.length; i++){
+    if(((int *)a.base)[i] == element){
+     return i;
+    }
+ };
+return -1;
+};
+
