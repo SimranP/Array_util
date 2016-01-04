@@ -90,6 +90,20 @@ void test2_for_findIndex(){
   printf("test passed\n\n");
 };
 
+void test_for_dispose(){
+  Array a = create(5,6);
+  ((int *)a.base)[4] = 8;
+  ((int *)a.base)[3] = 8;
+  ((int *)a.base)[2] = 9;
+  ((int *)a.base)[1] = 8;
+  ((int *)a.base)[5] = 8;
+  ((int *)a.base)[0] = 6;
+  dispose(a);
+  //printf("%d\n",a.length);
+  //assert(a.length == 0);
+  printf("test passed\n");
+};
+
 
 int main(void){
   printf("1.test_for_create_array: 'create' creates an array and adds three fields to it\n");
@@ -112,6 +126,8 @@ int main(void){
   test_for_findIndex();
   printf("10.test2_for_findIndex:'findIndex' gives index number  when it doesn't have the given element\n");
   test2_for_findIndex();
+  printf("11.test2_for_dispose:'dispose' releases the memory allocated in array's base field\n");
+  test_for_dispose();
   return 0;
 };
 

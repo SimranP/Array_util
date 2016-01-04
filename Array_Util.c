@@ -20,9 +20,8 @@ int areEqual(Array a, Array b){
     return 0;
   int i = 0;
   while(i<a.length){
-    if(!(((int *)a.base)[i]==((int *)b.base)[i])){
+    if(!(((int *)a.base)[i]==((int *)b.base)[i]))
       return 0;
-    }
     i++;
   }
   return 1;
@@ -30,10 +29,13 @@ int areEqual(Array a, Array b){
 
 int findIndex(Array a,void* element){
  for(int i = 0;i < a.length; i++){
-    if(((int *)a.base)[i] == element){
+    if(((int *)a.base)[i] == element)
      return i;
-    }
  };
 return -1;
 };
 
+void dispose(Array a){
+  free(a.base);
+};
+  
