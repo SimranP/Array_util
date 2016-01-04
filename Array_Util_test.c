@@ -12,6 +12,13 @@ void test_for_create_array(){
   printf("test passed\n\n");
 };
 
+void test2_for_create_array(){
+  Array numbers = create(4,2); 
+  assert(((int *)numbers.base)[0]==0);
+  assert(((int *)numbers.base)[1]==0);
+  printf("test passed\n\n");
+};
+
 void test_for_resize_array(){
   Array numbers = create(4,5);
   printf("Collected :typesize = %d , length = %d , base = %p\n",numbers.typeSize,numbers.length,numbers.base);
@@ -54,13 +61,15 @@ void test2_for_areEqual(){
 int main(void){
   printf("1.test_for_create_array: 'create' creates an array and adds three fields to it\n");
   test_for_create_array();
-  printf("2.test_for_resize_array:'resize' increases the size of array for greater given length\n");
+  printf("2.test2_for_create_array : 'create' initialize everything to 0\n");
+  test2_for_create_array();
+  printf("3.test_for_resize_array:'resize' increases the size of array for greater given length\n");
   test_for_resize_array();
-  printf("3.test2_for_resize_array:'resize' decreases the size of array for lesser given length\n");
+  printf("4.test2_for_resize_array:'resize' decreases the size of array for lesser given length\n");
   test2_for_resize_array();
-  printf("4.test_for_areEqual:'forEqual' gives 1 when given two arrays are same\n");
+  printf("5.test_for_areEqual:'forEqual' gives 1 when given two arrays are same\n");
   test_for_areEqual();
-  printf("5.test_for_areEqual:'forEqual' gives 0 when given two arrays are different\n");
+  printf("6.test_for_areEqual:'forEqual' gives 0 when given two arrays are different\n");
   test2_for_areEqual();
   return 0;
 };
