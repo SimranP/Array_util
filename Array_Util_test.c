@@ -156,7 +156,8 @@ void test_for_findFirst(){
   ((int *)a.base)[0] = 9;
   int divisor = 7;
   void * hint = &divisor;
-  assert(4==*(int *)findFirst(a,isEven,hint));
+  MatchFunc func = isEven;
+  assert(4==*(int *)findFirst(a,&func,hint));
   printf("test passed\n\n");
 };
 
@@ -176,7 +177,8 @@ void test2_for_findFirst(){
   ((int *)a.base)[0] = 9;
   int divisor = 7;
   void * hint = &divisor;
-  assert(7==*(int *)findFirst(a,isDivisible,hint));
+  MatchFunc func = isDivisible;
+  assert(7==*(int *)findFirst(a,&func,hint));
   printf("test passed\n\n");
 };
 
@@ -190,7 +192,8 @@ void test3_for_findFirst(){
   ((int *)a.base)[0] = 9;
   int divisor =17;
   void * hint = &divisor;
-  assert(NULL==(int *)findFirst(a,isDivisible,hint));
+  MatchFunc func = isDivisible;
+  assert(NULL==(int *)findFirst(a,&func,hint));
   printf("test passed\n\n");
 };
 void test_for_findLast(){
@@ -203,7 +206,8 @@ void test_for_findLast(){
   ((int *)a.base)[0] = 9;
   int divisor = 7;
   void * hint = &divisor;
-  assert(14==*(int *)findLast(a,isDivisible,hint));
+  MatchFunc func = isDivisible;
+  assert(14==*(int *)findLast(a,&func,hint));
   printf("test passed\n\n");
 };
 
@@ -217,7 +221,8 @@ void test2_for_findLast(){
   ((int *)a.base)[0] = 9;
   int divisor = 17;
   void * hint = &divisor;
-  assert(NULL == (int *)findLast(a,isDivisible,hint));
+  MatchFunc func = isDivisible;
+  assert(NULL == (int *)findLast(a,&func,hint));
   printf("test passed\n\n");
 };
 
@@ -231,7 +236,45 @@ void test_for_count(){
   ((int *)a.base)[0] = 9;
   int divisor = 3;
   void * hint = &divisor;
-  assert(2 == count(a,isDivisible,hint));
+  MatchFunc func = &isDivisible;
+  assert(2 == count(a,&func,hint));
+  printf("test passed\n\n");
+};
+
+void test_for_filter(){
+  ArrayUtil a = create(4,5);
+  ((int *)a.base)[4] = 3;
+  ((int *)a.base)[3] = 4;
+  ((int *)a.base)[2] = 10;
+  ((int *)a.base)[1] = 8;
+  ((int *)a.base)[0] = 9;
+  ArrayUtil filtered = create(8,3);
+  int divisor = 3;
+  void * hint = &divisor;
+  void *dest = &filtered;
+  void **destination = &dest;
+  MatchFunc func = &isDivisible;
+  assert(2 == filter(a,&func,hint,destination,2));
+  printf("test passed\n\n");
+};
+
+void test2_for_filter(){
+  ArrayUtil a = create(4,5);
+  ((int *)a.base)[4] = 3;
+  ((int *)a.base)[3] = 4;
+  ((int *)a.base)[2] = 10;
+  ((int *)a.base)[1] = 8;
+  ((int *)a.base)[0] = 9;
+  ArrayUtil filtered = create(8,3);
+  int divisor = 2;
+  void * hint = &divisor;
+  void *dest = &filtered;
+  void **destination = &dest;
+  MatchFunc func = &isDivisible;
+  assert(3 == filter(a,&func,hint,destination,3));
+  assert(*(int *)destination[0] == 8);
+  assert(*(int *)destination[1] == 10);
+  assert(*(int *)destination[2] == 4);
   printf("test passed\n\n");
 };
 
@@ -273,6 +316,10 @@ int main(void){
   test2_for_findLast();
   printf("17.test_for_count:'count' gives count of values that matched the condition\n");
   test_for_count();
+  printf("18.test_for_filter:'filter' gives the count of values that matched the condition\n");
+  test_for_filter();
+  printf("19.test2_for_filter:'filter' stores the pointers of matched value in destination array\n");
+  test2_for_filter();
   return 0;
 };
 

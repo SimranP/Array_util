@@ -44,31 +44,42 @@ void dispose(ArrayUtil a){
 };
  
 
-void * findFirst(ArrayUtil util, MatchFunc match, void* hint){
+void * findFirst(ArrayUtil util, MatchFunc* match, void* hint){
   int * array = (int *)util.base;
-  for(int i = 0; i<util.length;i++){
-     if(match(hint,&array[i])) return &array[i];  
+  for(int i = 0;i < util.length * util.typeSize;i+=util.typeSize){
+     if((*match)(hint,&util.base[i])) return &util.base[i];  
   };
   return NULL;
 };
 
-void * findLast(ArrayUtil util, MatchFunc match, void* hint){
+void * findLast(ArrayUtil util, MatchFunc* match, void* hint){
   int * array = (int *)util.base;
   void *result = NULL;
-  for(int i = 0; i < util.length;i++){
-     if(match(hint,&array[i])) 
-      result = &array[i];  
+  for(int i = 0;i < util.length * util.typeSize;i+=util.typeSize){
+     if((*match)(hint,&util.base[i])) 
+      result = &util.base[i];  
   };
   return result;
 };
 
-int count(ArrayUtil util, MatchFunc match, void* hint){
-  int * array = (int *)util.base;
+int count(ArrayUtil util, MatchFunc* match, void* hint){
   int count = 0;
-  for(int i = 0; i < util.length;i++){
-     if(match(hint,&array[i])) 
+  for(int i = 0;i < util.length * util.typeSize;i+=util.typeSize){
+     if((*match)(hint,&util.base[i])) 
       count++;
   };
   return count;
 };
 
+int filter(ArrayUtil util, MatchFunc* match, void* hint, void** destination, int maxItems ){
+  int count = 0;
+  for(int i = 0;i < util.length * util.typeSize;i+=util.typeSize){
+    if((*match)(hint,&util.base[i])){
+      if(count < maxItems){
+      destination[count] = &util.base[i];
+      count++;
+      }
+    }
+  };
+  return count;
+};
