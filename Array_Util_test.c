@@ -251,7 +251,7 @@ void test_for_filter(){
   ArrayUtil filtered = create(8,3);
   int divisor = 3;
   void * hint = &divisor;
-  void *dest = &filtered;
+  void *dest = filtered.base;
   void **destination = &dest;
   MatchFunc func = &isDivisible;
   assert(2 == filter(a,&func,hint,destination,2));
@@ -268,20 +268,97 @@ void test2_for_filter(){
   ArrayUtil filtered = create(8,3);
   int divisor = 2;
   void * hint = &divisor;
-  void *dest = &filtered;
+  void *dest = filtered.base;
   void **destination = &dest;
   MatchFunc func = &isDivisible;
   assert(3 == filter(a,&func,hint,destination,3));
-  assert(*(int *)destination[0] == 8);
-  assert(*(int *)destination[1] == 10);
-  assert(*(int *)destination[2] == 4);
+  assert(((int *)filtered.base)[0] == 8 );
+  assert(((int *)filtered.base)[1] == 10);
+  assert(((int *)filtered.base)[2] == 4);
   printf("test passed\n\n");
 };
 
-int main(void){
+void multiply_with(void* hint, void* sourceItem, void* destinationItem){
+  int n= *(int *)(sourceItem);
+  int result = n*(*(int *)hint);
+  *(int *)destinationItem = result;
+};
+
+void test_for_map(){
+  ArrayUtil a = create(4,8);
+  ((int *)a.base)[2] = 2;
+  ((int *)a.base)[3] = 19;
+  ((int *)a.base)[4] = 172;
+  ((int *)a.base)[1] = 5;
+  ((int *)a.base)[0] = 4;
+  ArrayUtil mapped = create(8,3);
+  int multiplier = 2;
+  ConvertFunc func = &multiply_with;
+  map(a,mapped,&func,&multiplier);
+  assert(((int *)mapped.base)[0] == 8);
+  assert(((int *)mapped.base)[1] == 10);
+  assert(((int *)mapped.base)[2] == 4);
+  assert(((int *)mapped.base)[3] == 38);
+  assert(((int *)mapped.base)[4] == 344);
+  assert(((int *)mapped.base)[5] == 0);
+  printf("test passed\n\n");
+};
+
+void * sum(void *hint,void *previousItem,void *item){
+  int p = *(int *)previousItem;
+  int n = *(int *)item;
+  int result =  p+n;
+  void * result_address = &result;
+  return result_address;
+};
+
+void test_for_reduce(){
+  ArrayUtil a = create(4,8);
+  ((int *)a.base)[2] = 2;
+  ((int *)a.base)[3] = 19;
+  ((int *)a.base)[4] = 172;
+  ((int *)a.base)[1] = 5;
+  ((int *)a.base)[0] = 4;
+  ReducerFunc func = &sum;
+  int somehint = 9;
+  void * hint = &somehint;
+  int value = 0;
+  void * initialValue = &value;
+  void * result = reduce(a,&func,hint,initialValue);
+  assert(202 == *(int *)result);
+  printf("test passed\n\n");
+};
+
+void multiply_by_2(void *hint,void *item){
+  int n= *(int *)(item);
+  int result = n*(*(int *)hint);
+  *(int *)item = result;
+};
+
+void test_for_forEach(){
+  ArrayUtil a = create(4,8);
+  ((int *)a.base)[2] = 2;
+  ((int *)a.base)[3] = 19;
+  ((int *)a.base)[4] = 172;
+  ((int *)a.base)[1] = 5;
+  ((int *)a.base)[0] = 4;
+  int multiplier = 2;
+  void *hint = &multiplier;
+  OperationFunc func = &multiply_by_2;
+  forEach(a,&func,hint);
+  assert(((int *)a.base)[0] == 8);
+  assert(((int *)a.base)[1] == 10);
+  assert(((int *)a.base)[2] == 4);
+  assert(((int *)a.base)[3] == 38);
+  assert(((int *)a.base)[4] == 344);
+  assert(((int *)a.base)[5] == 0);
+  printf("test passed\n\n");
+};
+
+ int main(void){
   printf("1.test_for_create_array: 'create' creates an array and adds three fields to it\n");
   test_for_create_array();
-  printf("2.test2_for_create_array : 'create' initialize everything to 0\n");
+  printf("2.test2_for_create_array: 'create' initialize everything to 0\n");
   test2_for_create_array();
   printf("3.test_for_resize_array:'resize' increases the size of array for greater given length\n");
   test_for_resize_array();
@@ -320,6 +397,12 @@ int main(void){
   test_for_filter();
   printf("19.test2_for_filter:'filter' stores the pointers of matched value in destination array\n");
   test2_for_filter();
+  printf("20.test_for_map:'map' stores the resultant values in the destination array\n");
+  test_for_map();
+  printf("21.test_for_reduce:'reduce' gives the pointer to the resultant value\n");
+  test_for_reduce();
+  printf("22.test_for_forEach:'forEach' gives the apply the operation on every element of the given array\n");
+  test_for_forEach();
   return 0;
 };
 

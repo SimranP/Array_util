@@ -76,10 +76,29 @@ int filter(ArrayUtil util, MatchFunc* match, void* hint, void** destination, int
   for(int i = 0;i < util.length * util.typeSize;i+=util.typeSize){
     if((*match)(hint,&util.base[i])){
       if(count < maxItems){
-      destination[count] = &util.base[i];
-      count++;
+        ((int *)(*destination))[count] = ((char *)util.base)[i];
+        count++;
       }
     }
   };
   return count;
 };
+
+void map(ArrayUtil source, ArrayUtil destination, ConvertFunc* convert, void* hint){
+   for(int i = 0;i < source.length * source.typeSize ;i+= source.typeSize)
+        (*convert)(hint,&source.base[i],&destination.base[i]);
+};
+
+void* reduce(ArrayUtil util, ReducerFunc* reducer, void* hint, void* initialValue){
+  void * reducedValue = initialValue;
+   for(int i = 0;i < util.length * util.typeSize ;i+= util.typeSize){
+     reducedValue = (*reducer)(hint,reducedValue,&util.base[i]);
+   }
+   return reducedValue;
+};
+
+void forEach(ArrayUtil util, OperationFunc* operation, void* hint){
+   for(int i = 0;i < util.length * util.typeSize ;i+= util.typeSize)
+     (*operation)(hint,&util.base[i]);
+};
+
